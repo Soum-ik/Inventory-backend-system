@@ -4,17 +4,20 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "sarkarsoumik215@gmail.com",
-    pass: "smsw kceo zlmj wdgm",
+    pass: "unyn oiqq kavj awzj",
   },
 });
 
-const sendEmail = async (EmailTo, EmailSubject, EmailText) => {
-  console.log(EmailTo, EmailSubject, EmailText);
+const sendEmail = async (EmailText, EmailSubject, EmailTo) => {
+  console.log("user text", EmailText);
+  console.log("user subject", EmailSubject);
+  console.log("user address", EmailTo);
+
   const mailOptions = {
     from: "sarkarsoumik215@gmail.com",
-    to: EmailTo,
-    subject: EmailSubject,
-    html: EmailText,
+    to: `${EmailTo}`,
+    subject: `${EmailSubject}`,
+    text: `${EmailText}`,
   };
   console.log("data");
   try {

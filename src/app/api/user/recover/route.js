@@ -12,7 +12,7 @@ export async function GET(req, res) {
     const data = await prisma.users.count({ where: { email: email } });
 
     if (data === 1) {
-      const randomNumber = Math.floor(Math.random() * 9000000);
+      let randomNumber = Math.floor(Math.random() * 9000000);
       console.log(randomNumber);
       const result = await prisma.users.update({
         where: {
@@ -23,12 +23,13 @@ export async function GET(req, res) {
         },
       });
 
-      // let EmailTo = email;
-      // let EmailSubject =
-      //   " Reset OTP!  use otp and change your password password";
-      // let EmailText = `you're code ${randomNumber}`;
+      let EmailSubject = " Reset OTP!  use otp and change your password password";
+      let EmailText = `you're code ${randomNumber}`;
+      let EmailTo = email;
+       
+console.log(EmailTo);
+      await sendEmail(EmailText, EmailSubject, EmailTo);
 
-      // await sendEmail(EmailSubject, EmailText, EmailTo);
       return NextResponse.json({
         status: "success",
         data: "6 digit data send successfully",

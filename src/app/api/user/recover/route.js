@@ -1,20 +1,16 @@
-import { sendMail } from "@/app/utility/EmailIusser";
+import sendEmail from "@/app/utility/EmailIusser";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(req, res) {
   try {
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
     const prisma = new PrismaClient();
-    const { email } = await req.json();
 
-    const data = await prisma.users.findUnique({
-      where: {
-        email: email,
-      },
-    });
+    const data = await prisma.users.count({ where: { email: email } });
 
-    console.log(data, 'data');
-    if (data) {
+    if (data === 1) {
       const randomNumber = Math.floor(Math.random() * 9000000);
       console.log(randomNumber);
       const result = await prisma.users.update({
@@ -26,22 +22,18 @@ export async function POST(req, res) {
         },
       });
 
-      let EmailTo = "sarkarsoumik215@gmail.com";
+      let EmailTo = "ratulsarkar216@gmail.com";
       let EmailSubject = " Reset OTP here use otp and change the password";
       let EmailText = `you're code ${randomNumber}`;
 
-      await sendMail(EmailSubject, EmailText, EmailTo);
-
+      await sendEmail(EmailSubject, EmailText, EmailTo);
       return NextResponse.json({
         status: "success",
-        data: "your 6 digit code are going successfully",
+        data: "6 digit data send successfully",
         res: result,
       });
     } else {
-      return NextResponse.json({
-        status: "fail",
-        data: "information are worng",
-      });
+      return NextResponse.json({ status: "fail", data: "no user found" });
     }
   } catch (error) {
     console.log(error);
